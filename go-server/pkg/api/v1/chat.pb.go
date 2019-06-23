@@ -10,6 +10,8 @@ import (
 	empty "github.com/golang/protobuf/ptypes/empty"
 	wrappers "github.com/golang/protobuf/ptypes/wrappers"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -24,9 +26,9 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-// Message is response for ChatService.Subscribe method
+// Message represents the response received when subscribing to chat service
 type Message struct {
-	// message body
+	// Message body
 	Text                 string   `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -99,9 +101,9 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ChatServiceClient interface {
-	// Send sends message to the server
+	// Send sends a message to the server
 	Send(ctx context.Context, in *wrappers.StringValue, opts ...grpc.CallOption) (*empty.Empty, error)
-	// Subscribe is streaming method to get echo messages from the server
+	// Subscribe is the streaming method to get echo messages from the server
 	Subscribe(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (ChatService_SubscribeClient, error)
 }
 
@@ -156,10 +158,21 @@ func (x *chatServiceSubscribeClient) Recv() (*Message, error) {
 
 // ChatServiceServer is the server API for ChatService service.
 type ChatServiceServer interface {
-	// Send sends message to the server
+	// Send sends a message to the server
 	Send(context.Context, *wrappers.StringValue) (*empty.Empty, error)
-	// Subscribe is streaming method to get echo messages from the server
+	// Subscribe is the streaming method to get echo messages from the server
 	Subscribe(*empty.Empty, ChatService_SubscribeServer) error
+}
+
+// UnimplementedChatServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedChatServiceServer struct {
+}
+
+func (*UnimplementedChatServiceServer) Send(ctx context.Context, req *wrappers.StringValue) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Send not implemented")
+}
+func (*UnimplementedChatServiceServer) Subscribe(req *empty.Empty, srv ChatService_SubscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
 }
 
 func RegisterChatServiceServer(s *grpc.Server, srv ChatServiceServer) {
