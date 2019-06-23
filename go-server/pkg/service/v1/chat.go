@@ -8,7 +8,7 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/wrappers"
 
-	"github.com/amsokol/flutter-grpc-tutorial/go-server/pkg/api/v1"
+	"github.com/marceloaguero/flutter-grpc-tutorial/go-server/pkg/api/v1"
 )
 
 // chatServiceServer is implementation of v1.ChatServiceServer proto interface
