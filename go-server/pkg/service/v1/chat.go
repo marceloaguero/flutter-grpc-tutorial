@@ -8,10 +8,10 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/wrappers"
 
-	"github.com/marceloaguero/flutter-grpc-tutorial/go-server/pkg/api/v1"
+	v1 "github.com/marceloaguero/flutter-grpc-tutorial/go-server/pkg/api/v1"
 )
 
-// chatServiceServer is implementation of v1.ChatServiceServer proto interface
+// chatServiceServer is the implementation of v1.ChatServiceServer proto interface
 type chatServiceServer struct {
 	msg chan string
 }
@@ -21,7 +21,7 @@ func NewChatServiceServer() v1.ChatServiceServer {
 	return &chatServiceServer{msg: make(chan string, 1000)}
 }
 
-// Send sends message to the server
+// Send sends a message to the server
 func (s *chatServiceServer) Send(ctx context.Context, message *wrappers.StringValue) (*empty.Empty, error) {
 	if message != nil {
 		log.Printf("Send requested: message=%v", *message)
@@ -33,7 +33,7 @@ func (s *chatServiceServer) Send(ctx context.Context, message *wrappers.StringVa
 	return &empty.Empty{}, nil
 }
 
-// Subscribe is streaming method to get echo messages from the server
+// Subscribe is the streaming method to get echo messages from the server
 func (s *chatServiceServer) Subscribe(e *empty.Empty, stream v1.ChatService_SubscribeServer) error {
 	log.Print("Subscribe requested")
 	for {
